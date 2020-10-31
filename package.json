@@ -11,10 +11,11 @@
         "bot"
     ],
     "author": "kasparmat@hotmail.com",
-    "license": "ISC",
+    "license": "Apache-2.0",
     "dependencies": {
         "discord.js": "git+https://github.com/discordjs/discord.js.git",
         "discord.js-commando": "git+https://github.com/discordjs/Commando.git",
         "dotenv": "^8.2.0"
-    }
+    },
+    "private": true
 }
