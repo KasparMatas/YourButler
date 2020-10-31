@@ -1,6 +1,6 @@
 const path = require('path');
 const Database = require('better-sqlite3')
-const db = new Database('settings.db')
+const db = new Database('my_data.db')
 
 const { CommandoClient, SyncSQLiteProvider } = require('discord.js-commando');
 const { Discord } = require('discord.js');
