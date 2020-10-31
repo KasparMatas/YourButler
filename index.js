@@ -1,6 +1,9 @@
-const { CommandoClient } = require('discord.js-commando');
-const { Discord } = require('discord.js');
 const path = require('path');
+const Database = require('better-sqlite3')
+const db = new Database('settings.db')
+
+const { CommandoClient, SyncSQLiteProvider } = require('discord.js-commando');
+const { Discord } = require('discord.js');
 
 require('dotenv').config();
 const {
@@ -14,6 +17,8 @@ const client = new CommandoClient({
     owner: OWNERS,
 });
 
+client.setProvider(new SyncSQLiteProvider(db)).catch(console.error);
+
 client.registry
     .registerDefaultTypes()
     .registerGroups([
@@ -26,6 +31,10 @@ client.registry
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}! (${client.user.id})`);
+    console.log(`Available guilds:`);
+    client.guilds.cache.each(guild => {
+        console.log(`${guild.name}(${guild.id})`);
+    });
 });
 
 client.on('error', console.error);
