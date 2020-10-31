@@ -6,6 +6,7 @@ module.exports = class MeowCommand extends Command {
             group: 'admin',
             memberName: 'hello',
             description: 'Hello world command',
+            ownerOnly: true,
         });
     }
 

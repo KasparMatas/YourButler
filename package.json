@@ -13,9 +13,11 @@
     "author": "kasparmat@hotmail.com",
     "license": "Apache-2.0",
     "dependencies": {
+        "better-sqlite3": "^7.1.1",
         "discord.js": "git+https://github.com/discordjs/discord.js.git",
         "discord.js-commando": "git+https://github.com/discordjs/Commando.git",
-        "dotenv": "^8.2.0"
+        "dotenv": "^8.2.0",
+        "eslint": "^7.12.1"
     },
     "private": true
 }
