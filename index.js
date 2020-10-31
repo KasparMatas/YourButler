@@ -16,7 +16,12 @@ const client = new CommandoClient({
     owner: OWNERS,
 });
 
-client.setProvider(new SyncSQLiteProvider(db)).catch(console.error);
+client.setProvider(new SyncSQLiteProvider(db)).then(() => {
+    const saved_owners = client.provider.get('global', 'owner_id_list', null);
+    if (saved_owners) {
+        client.options.owner = saved_owners;
+    }
+}).catch(console.error);
 
 client.registry
     .registerDefaultTypes()
