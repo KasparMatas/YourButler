@@ -40,13 +40,14 @@ To get inspiration the existing code and commits can be looked at (and the workf
 * What am I registered for command
 * Help command
 * Music playing capabilities
+* Muting/unmuting (important for AmongUs)
 
 ## How the evening could look like
 1. The users get invited to a channel (Ideally created by the bot - based on some configuration)
 2. Once joined the channel they should register in various ways
 3. The users only see general/announcement/registration/introduction text channels and 1 general voice channel they can interact with
 4. On the day registrations get confirmed by some sign-in mechanism.
-5. Then after allocation guests see more channels (text/voice) based on their allocation(given role)
+5. Then after allocation guests see more channels (text & voice) for different teams and instructions (done with role with different permissions)
 
 For ice breakers the bot can facilitate bunch of other sillyness
 
