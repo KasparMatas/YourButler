@@ -14,18 +14,26 @@ module.exports = class NextAllocationCommand extends Command {
     }
 
     run(message) {
-        const embed = new MessageEmbed()
-            .setColor('#32a858')
-            .setTitle('Next game allocations')
-            .setDescription('Below you can see which voice channel you should join.')
-            .addFields(
-                { name: 'CS:GO :gun:', value: ['Player1', 'Player2', 'Player3'] },
-                { name: 'Among us :astronaut:', value: 'Player4\nPlayer5\nPlayer6' },
-                { name: 'Rocket League :soccer:', value: 'Player7\nPlayer8\nPlayer9' },
-            )
-            .setTimestamp()
-            .setFooter('Playtime start:');
-
-        return message.channel.send(embed);
+        const provider = message.client.provider;
+        const guild = message.guild;
+        const available_games = provider.get(guild, 'available_games', []);
+        if (available_games.size != 0) {
+            const embed = new MessageEmbed()
+                .setColor('#32a858')
+                .setTitle('Next game allocations')
+                .setDescription('Below you can see which voice channel you should join.')
+                .setTimestamp()
+                .setFooter('Playtime start:');
+            available_games.forEach(game => {
+                const player_list = provider.get(guild, game, []);
+                if (player_list.size != 0) {
+                    embed.addFields({ name: game, value: player_list });
+                }
+            });
+            return message.channel.send(embed);
+        }
+        else {
+            return message.say('There are no registrations found!');
+        }
     }
 };
