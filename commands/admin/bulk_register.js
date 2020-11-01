@@ -30,9 +30,10 @@ module.exports = class BulkRegisterCommand extends Command {
                     });
             });
             provider.set(guild, 'available_games', available_games);
+            return message.say('Registration data successully replaced.');
         }
         else {
-            return message.say('No registration data attachment found');
+            return message.say('No registration data attachment found!');
         }
     }
 };
