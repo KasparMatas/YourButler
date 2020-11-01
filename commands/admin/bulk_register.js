@@ -6,7 +6,7 @@ module.exports = class BulkRegisterCommand extends Command {
             name: 'bulk_register',
             group: 'admin',
             memberName: 'bulk_register',
-            description: 'Command to register all of the players in the attached file to their respective games',
+            description: 'Command to register all of the players in the attached file to their respective games. This does overwrite previous registrations!',
             ownerOnly: true,
             guildOnly: true,
         });
@@ -14,15 +14,14 @@ module.exports = class BulkRegisterCommand extends Command {
 
     run(message) {
         if (message.attachments.size != 0) {
+            const provider = message.client.provider;
+            const guild = message.guild;
             message.attachments.each(attachement => {
-                console.log(attachement.url);
                 fetch(attachement.url)
                     .then(res => res.text())
                     .then(body => {
-                        const data = JSON.parse(body);
-                        Object.entries(data).forEach(([game, players]) => {
-                            console.log(game);
-                            console.log(players);
+                        Object.entries(JSON.parse(body)).forEach(([game, players]) => {
+                            provider.set(guild, game, players);
                         });
                     });
             });
