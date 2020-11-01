@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const { Command } = require('discord.js-commando');
 module.exports = class BulkRegisterCommand extends Command {
     constructor(client) {
@@ -15,6 +16,15 @@ module.exports = class BulkRegisterCommand extends Command {
         if (message.attachments.size != 0) {
             message.attachments.each(attachement => {
                 console.log(attachement.url);
+                fetch(attachement.url)
+                    .then(res => res.text())
+                    .then(body => {
+                        const data = JSON.parse(body);
+                        Object.entries(data).forEach(([game, players]) => {
+                            console.log(game);
+                            console.log(players);
+                        });
+                    });
             });
         }
         else {
