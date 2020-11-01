@@ -21,6 +21,10 @@ The bot is run using node.js - also deals with the dependencies specified in "pa
 
 To get inspiration the existing code and commits can be looked at (and the workflow to follow!) or other open source projects can be found on the interwebs: https://github.com/topics/discord-js-commando
 
+### SQLite usage
+
+To save settings after the bot being shutdown all of the data is stored using the Commando.Provider class to manipulate a SQLite database. The database itself is stored in the my_data.db file which can be viewed in various ways. (You can look it up!)
+
 ## Ideas not written down as issues yet
 * Add player
 * Remove player
