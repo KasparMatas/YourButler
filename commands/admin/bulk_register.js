@@ -16,15 +16,20 @@ module.exports = class BulkRegisterCommand extends Command {
         if (message.attachments.size != 0) {
             const provider = message.client.provider;
             const guild = message.guild;
+            const available_games = provider.get(guild, 'available_games', []);
             message.attachments.each(attachement => {
                 fetch(attachement.url)
                     .then(res => res.text())
                     .then(body => {
                         Object.entries(JSON.parse(body)).forEach(([game, players]) => {
                             provider.set(guild, game, players);
+                            if (!available_games.includes(game)) {
+                                available_games.push(game);
+                            }
                         });
                     });
             });
+            provider.set(guild, 'available_games', available_games);
         }
         else {
             return message.say('No registration data attachment found');
