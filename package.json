@@ -17,7 +17,8 @@
         "discord.js": "git+https://github.com/discordjs/discord.js.git",
         "discord.js-commando": "git+https://github.com/discordjs/Commando.git",
         "dotenv": "^8.2.0",
-        "eslint": "^7.12.1"
+        "eslint": "^7.12.1",
+        "node-fetch": "^2.6.1"
     },
     "private": true
 }
