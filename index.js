@@ -26,7 +26,9 @@ client.setProvider(new SyncSQLiteProvider(db)).then(() => {
 client.registry
     .registerDefaultTypes()
     .registerGroups([
-        ['admin', 'owner only commands'],
+        ['admin', 'hidden commands'],
+        ['games', 'acquired commands'],
+        ['guest', 'available commands'],
     ])
     .registerCommandsIn(path.join(__dirname, 'commands'))
     // Remove later
