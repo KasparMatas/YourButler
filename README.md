@@ -12,8 +12,8 @@ The main purpose of this bot is to matchmake discord users to different games. W
 The base of the bot has been created and you are free to add whatever you want. (Just don't break anything and don't create crazy merge conflicts!)
 
 To start contributing it is recommended to understand the following material:
-[Base discordjs guide](https://discordjs.guide/)
-[Base discordjs commando guide](https://discordjs.guide/commando/) OR [Similar custom discordjs commando guide](https://dragonfire535.gitbooks.io/discord-js-commando-beginners-guide/content/getting-started.html)
+* [Base discordjs guide](https://discordjs.guide/)
+* [Base discordjs commando guide](https://discordjs.guide/commando/) OR [Similar custom discordjs commando guide](https://dragonfire535.gitbooks.io/discord-js-commando-beginners-guide/content/getting-started.html)
 
 Both of the libraries have good documentation available [here](https://discord.js.org/#/docs/main/stable/general/welcome)
 
