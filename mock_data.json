@@ -1,6 +1,11 @@
 {
-"CSGO":["A","B","C","D"],
-"RL":["B","D","E","F","G"],
-"PINT":["A","B"],
-"JB":["A","B","D","D","E"]
+"Pinturillo":["Edvard", "Tuan", "Kaspar", "Ollie", "Jake", "Kristiyan", "Sander", "Siim", "Kaarel", "Ergo", "Nikola", "Joann", "Oliver", "Edward", "Hendrik"],
+"Jackbox":["Tuan", "Ryan", "Edvard", "Stein", "Martin", "Ollie", "Dragos", "Nikola", "Arron", "Markkus", "Sander", "Charlie", "Edward", "Nick", "Moataz", "Martina", "Kaarel", "Ergo", "Hendrik", "Kaspar", "Buro", "Holly", "Kiana", "Oliver", "Joann", "Khoa"],
+"Garrys_Mod":["Andreas", "Ryan", "Ollie", "Holly", "Hendrik", "Arron", "Martina", "Kristiyan", "Khoa", "Stein", "Edward", "Jake", "Kiana", "Moataz", "Edvard", "Sander", "Martin", "Kaspar", "Oliver", "Kaarel", "Siim", "Ergo"],
+"CS_GO":["Kristiyan", "Ryan", "Kaarel", "Nikola", "Nick", "Edward", "Tuan", "Khoa"],
+"Rocket_League":["Dragos", "Kristiyan", "Edvard", "Joann", "Hendrik"],
+"Among_Us":["Kiana", "Hendrik", "Sander", "Arron", "Dragos", "Jake", "Markkus", "Meg", "Martina", "Nikola", "Ollie", "Buro", "Kristiyan", "Siim", "Edward"],
+"Brawlhalla":["Edvard", "Martina", "Moataz", "Martin", "Nick", "Ryan", "Markkus", "Mark", "Kaspar", "Dragos", "Holly", "Joann", "Kiana"],
+"Diabotical":["Ergo", "Hendrik", "Kiana", "Meg", "Mark", "Kaspar", "Charlie", "Andreas", "Arron", "Stein"],
+"Cards_Against_Humanity":["Ergo", "Hendrik", "Kiana", "Meg", "Mark", "Kaspar", "Charlie", "Andreas", "Arron", "Stein"]
 }
