@@ -1,5 +1,5 @@
 # Different command groups
-Below you can see different command groups described for organising the commands
+Below you can see different command groups described for organising the commands. Not much here at the moment 😞
 
 ## Admin
 These commands should be **hidden** from the guests and can be used to configure the bot and manage things in the background.

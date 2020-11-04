@@ -12,41 +12,22 @@ The main purpose of this bot is to matchmake discord users to different games. W
 The base of the bot has been created and you are free to add whatever you want. (Just don't break anything and don't create crazy merge conflicts!)
 
 To start contributing it is recommended to understand the following material:
-https://discordjs.guide/
-https://discordjs.guide/commando/ OR https://dragonfire535.gitbooks.io/discord-js-commando-beginners-guide/content/getting-started.html
+* [Base discordjs guide](https://discordjs.guide/)
+* [Base discordjs commando guide](https://discordjs.guide/commando/) OR [Similar custom discordjs commando guide](https://dragonfire535.gitbooks.io/discord-js-commando-beginners-guide/content/getting-started.html)
 
-Both of the libraries have good documentation available at https://discord.js.org/#/docs/main/stable/general/welcome
+Both of the libraries have good documentation available [here](https://discord.js.org/#/docs/main/stable/general/welcome)
 
-The bot is run using node.js - also deals with the dependencies specified in "package.json"
+The bot is run using **node.js** - also deals with the dependencies specified in *package.json*. The GitHub token should be stored in a *.env* file which use is described [here](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/other-guides/env-files.md)
 
-To get inspiration the existing code and commits can be looked at (and the workflow to follow!) or other open source projects can be found on the interwebs: https://github.com/topics/discord-js-commando
+To get inspiration the existing code and commits can be looked at (and the workflow to follow!) or other open source projects can be found on the [interwebs](https://github.com/topics/discord-js-commando)
 
 ### SQLite usage
 
-To save settings after the bot being shutdown all of the data is stored using the Commando.Provider class to manipulate a SQLite database. The database itself is stored in the my_data.db file which can be viewed in various ways. (You can look it up!)
-
-## Ideas not written down as issues yet
-* Add player
-* Remove player
-* Make adding and removing user/mention based
-* Add multiple mentioned players
-* Aliases for games
-* Emojis attached to games
-* Register with reactions to a pinned message
-* Create voice channel
-* Create text channel
-* Post pinned messages
-* Move player to allocated server
-* Shuffle current allocation again
-* Attach roles with correct permissions.
-* Swap
-* Sitout round - Just chatting
-* What am I registered for command
-* Help command
-* Music playing capabilities
-* Muting/unmuting (important for AmongUs)
+To save settings after the bot being shutdown all of the data is stored using the *Commando.Provider* class to manipulate a **SQLite** database. The database itself is stored in the *my_data.db* file which can be viewed in various ways. (You can look it up! I use [DB Browser](https://sqlitebrowser.org/))
 
 ## How the evening could look like
+Below you can find the short version. For a longer discussion check out the [Wiki](https://github.com/KasparMatas/YourButler/wiki)!
+
 1. The users get invited to a channel (Ideally created by the bot - based on some configuration)
 2. Once joined the channel they should register in various ways
 3. The users only see general/announcement/registration/introduction text channels and 1 general voice channel they can interact with
