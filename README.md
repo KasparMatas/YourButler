@@ -25,27 +25,6 @@ To get inspiration the existing code and commits can be looked at (and the workf
 
 To save settings after the bot being shutdown all of the data is stored using the *Commando.Provider* class to manipulate a **SQLite** database. The database itself is stored in the *my_data.db* file which can be viewed in various ways. (You can look it up! I use [DB Browser](https://sqlitebrowser.org/))
 
-## Ideas not written down as issues yet
-* Add player
-* Remove player
-* Make adding and removing user/mention based
-* Add multiple mentioned players
-* Aliases for games
-* Emojis attached to games
-* Register with reactions to a pinned message
-* Create voice channel
-* Create text channel
-* Post pinned messages
-* Move player to allocated server
-* Shuffle current allocation again
-* Attach roles with correct permissions.
-* Swap
-* Sitout round - Just chatting
-* What am I registered for command
-* Help command
-* Music playing capabilities
-* Muting/unmuting (important for AmongUs)
-
 ## How the evening could look like
 Below you can find the short version. For a longer discussion check out the [Wiki](https://github.com/KasparMatas/YourButler/wiki)!
 
