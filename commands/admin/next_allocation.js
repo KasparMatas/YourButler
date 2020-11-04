@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed, Collection } = require('discord.js');
+const { reverseCollection, pushToCollectionValueList } = require('../../util');
 module.exports = class NextAllocationCommand extends Command {
     constructor(client) {
         super(client, {
@@ -11,29 +12,6 @@ module.exports = class NextAllocationCommand extends Command {
             ownerOnly: true,
             guildOnly: true,
         });
-    }
-
-    reverseCollection(orignal_collection) {
-        const new_collection = new Collection();
-        orignal_collection.each((value_array, key) => {
-            value_array.forEach(value => {
-                this.pushToCollectionValue(new_collection, value, key);
-            });
-        });
-        return new_collection;
-    }
-
-    pushToCollectionValue(collection, key, value) {
-        if (collection.has(key)) {
-            const value_list = collection.get(key);
-            if (!value_list.includes(value)) {
-                value_list.push(value);
-                collection.set(key, value_list);
-            }
-        }
-        else {
-            collection.set(key, [value]);
-        }
     }
 
     getRandomElementFromArray(array) {
@@ -57,11 +35,11 @@ module.exports = class NextAllocationCommand extends Command {
             }
         });
 
-        const player_registrations = this.reverseCollection(game_registrations);
+        const player_registrations = reverseCollection(game_registrations);
 
         const game_allocations = new Collection();
         player_registrations.each((game_list, player) => {
-            this.pushToCollectionValue(game_allocations, this.getRandomElementFromArray(game_list), player);
+            pushToCollectionValueList(game_allocations, this.getRandomElementFromArray(game_list), player);
         });
 
         const embed = new MessageEmbed()
