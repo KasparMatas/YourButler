@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed, Collection } = require('discord.js');
-const { reverseCollection, pushToCollectionValueList } = require('../../util');
+const { pushToCollectionValueList } = require('../../util');
 module.exports = class NextAllocationCommand extends Command {
     constructor(client) {
         super(client, {
@@ -14,32 +14,34 @@ module.exports = class NextAllocationCommand extends Command {
         });
     }
 
-    getRandomElementFromArray(array) {
-        return array[Math.floor(Math.random() * array.length)];
+    getNextGameBasedOnProbabilites(game_probabilities) {
+        const game_list = Object.keys(game_probabilities);
+        const random_sum = Math.random();
+        let current_sum = 0;
+        for (const game of game_list) {
+            current_sum += game_probabilities[game];
+            if (current_sum > random_sum) {
+                return game;
+            }
+        }
     }
 
     run(message) {
         const provider = message.client.provider;
         const guild = message.guild;
-        const available_games = provider.get(guild, 'available_games', []);
+        const registered_players = provider.get(guild, 'registered_players', []);
 
-        if (available_games.size == 0) {
+        if (registered_players.size == 0) {
             return message.say('There are no registrations found!');
         }
 
-        const game_registrations = new Collection();
-        available_games.forEach(game => {
-            const player_list = provider.get(guild, game, []);
-            if (player_list.size != 0) {
-                game_registrations.set(game, player_list);
-            }
-        });
-
-        const player_registrations = reverseCollection(game_registrations);
-
         const game_allocations = new Collection();
-        player_registrations.each((game_list, player) => {
-            pushToCollectionValueList(game_allocations, this.getRandomElementFromArray(game_list), player);
+
+        registered_players.forEach(player => {
+            const current_probabilities = provider.get(guild, player, null);
+            if (current_probabilities != null) {
+                pushToCollectionValueList(game_allocations, this.getNextGameBasedOnProbabilites(current_probabilities), player);
+            }
         });
 
         const embed = new MessageEmbed()
