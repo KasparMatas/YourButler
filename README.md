@@ -15,11 +15,12 @@ To start contributing it is recommended to understand the following material:
 * [Base discordjs guide](https://discordjs.guide/)
 * [Base discordjs commando guide](https://discordjs.guide/commando/) OR [Similar custom discordjs commando guide](https://dragonfire535.gitbooks.io/discord-js-commando-beginners-guide/content/getting-started.html)
 
-Both of the libraries have good documentation available [here](https://discord.js.org/#/docs/main/stable/general/welcome)
+Both of the libraries have good documentation available [here](https://discord.js.org/#/docs/main/stable/general/welcome).
 
-The bot is run using **node.js** - also deals with the dependencies specified in *package.json*. The GitHub token should be stored in a *.env* file which use is described [here](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/other-guides/env-files.md)
+### How to run
+Step by step instructions to run the bot can be seen in the [Wiki](https://github.com/KasparMatas/YourButler/wiki)!
 
-To get inspiration the existing code and commits can be looked at (and the workflow to follow!) or other open source projects can be found on the [interwebs](https://github.com/topics/discord-js-commando)
+The bot is run using **node.js** - also deals with the dependencies specified in *package.json*. The GitHub token should be stored in a *.env* file which use is described [here](https://github.com/AnIdiotsGuide/discordjs-bot-guide/blob/master/other-guides/env-files.md).
 
 ### SQLite usage
 
@@ -28,12 +29,14 @@ To save settings after the bot being shutdown all of the data is stored using th
 ## How the evening could look like
 Below you can find the short version. For a longer discussion check out the [Wiki](https://github.com/KasparMatas/YourButler/wiki)!
 
-1. The users get invited to a channel (Ideally created by the bot - based on some configuration)
-2. Once joined the channel they should register in various ways
-3. The users only see general/announcement/registration/introduction text channels and 1 general voice channel they can interact with
+1. The users get invited to a channel (Ideally created by the bot - based on some configuration).
+2. Once joined the channel they should register in various ways.
+3. The users only see general/announcement/registration/introduction text channels and 1 general voice channel they can interact with.
 4. On the day registrations get confirmed by some sign-in mechanism.
-5. Then after allocation guests see more channels (text & voice) for different teams and instructions (done with role with different permissions)
+5. Then after allocation guests see more channels (text & voice) for different teams and instructions (done with role with different permissions).
 
 For ice breakers the bot can facilitate bunch of other sillyness
 
 If everything is done perfectly the admins don't have to do anything and everything is automated by the bot. Kind of "just press next slide".
+
+To get inspiration the existing code and commits can be looked at (and the workflow to follow!) or other open source projects can be found on the [interwebs](https://github.com/topics/discord-js-commando).
