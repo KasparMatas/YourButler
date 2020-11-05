@@ -29,6 +29,7 @@ module.exports = class NextAllocationCommand extends Command {
     allocatePlayersToLobbies(player_list, game_allocations, provider, guild) {
         player_list.forEach(player => {
             const current_probabilities = provider.get(guild, player, null);
+            // Else should return or throw an error somehow.
             if (current_probabilities != null) {
                 pushToCollectionValueList(game_allocations, this.getNextGameBasedOnProbabilites(current_probabilities), player);
             }
@@ -60,6 +61,30 @@ module.exports = class NextAllocationCommand extends Command {
                     game_allocations.delete(game);
                 }
             }
+        });
+    }
+
+    updateAllocationProbabilities(game_allocations, provider, guild) {
+        game_allocations.each((players_in_lobby, game) => {
+            players_in_lobby.forEach(player => {
+                const current_probabilities = provider.get(guild, player, null);
+                // Else should return or throw an error somehow.
+                if (current_probabilities != null) {
+                    const game_list = Object.keys(current_probabilities);
+                    if (game_list.length != 1) {
+                        const current_game_value = current_probabilities[game];
+                        const other_games_update_value = current_game_value / (game_list.length - 1);
+
+                        game_list.forEach(potential_next_game => {
+                            current_probabilities[potential_next_game] += other_games_update_value;
+                        });
+                        current_probabilities[game] = 0;
+
+                        console.log(current_probabilities);
+                        provider.set(guild, player, current_probabilities);
+                    }
+                }
+            });
         });
     }
 
@@ -96,6 +121,8 @@ module.exports = class NextAllocationCommand extends Command {
                 return message.say('Sorry failed to allocate due to limitis!');
             }
         }
+
+        this.updateAllocationProbabilities(game_allocations, provider, guild);
 
         const embed = new MessageEmbed()
             .setColor('#32a858')
