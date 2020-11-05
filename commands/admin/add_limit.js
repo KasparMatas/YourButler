@@ -28,6 +28,9 @@ module.exports = class AddLimitCommand extends Command {
     }
 
     run(message, { game_name, min, max }) {
+        if (max < min) {
+            return message.say('The MAX needs to be bigger than the MIN!');
+        }
         const provider = message.client.provider;
         const guild = message.guild;
 
