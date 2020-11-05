@@ -26,6 +26,53 @@ module.exports = class NextAllocationCommand extends Command {
         }
     }
 
+    allocatePlayersToLobbies(player_list, game_allocations, provider, guild) {
+        player_list.forEach(player => {
+            const current_probabilities = provider.get(guild, player, null);
+            if (current_probabilities != null) {
+                pushToCollectionValueList(game_allocations, this.getNextGameBasedOnProbabilites(current_probabilities), player);
+            }
+        });
+    }
+
+    checkLobbyAgainstMaxLimit(game_allocations, unallocated_players, provider, guild) {
+        const lobby_limits = provider.get(guild, 'lobby_limits', null);
+        if (lobby_limits == null) {
+            console.log('No limits found?');
+            return;
+        }
+        game_allocations.each((players_in_lobby, game) => {
+            if (Object.keys(lobby_limits).includes(game)) {
+                if (players_in_lobby.length < lobby_limits[game].min) {
+                    console.log(game, players_in_lobby.length, '<', lobby_limits[game].min);
+                    game_allocations.get(game).forEach(player => {
+                        unallocated_players.push(player);
+                    });
+                    game_allocations.delete(game);
+                }
+            }
+        });
+    }
+
+    checkLobbyAgainstMinLimit(game_allocations, unallocated_players, provider, guild) {
+        const lobby_limits = provider.get(guild, 'lobby_limits', null);
+        if (lobby_limits == null) {
+            console.log('No limits found?');
+            return;
+        }
+        game_allocations.each((players_in_lobby, game) => {
+            if (Object.keys(lobby_limits).includes(game)) {
+                if (players_in_lobby.length > lobby_limits[game].max) {
+                    console.log(game, players_in_lobby.length, '>', lobby_limits[game].max);
+                    game_allocations.get(game).forEach(player => {
+                        unallocated_players.push(player);
+                    });
+                    game_allocations.delete(game);
+                }
+            }
+        });
+    }
+
     run(message) {
         const provider = message.client.provider;
         const guild = message.guild;
@@ -36,13 +83,23 @@ module.exports = class NextAllocationCommand extends Command {
         }
 
         const game_allocations = new Collection();
-
-        registered_players.forEach(player => {
-            const current_probabilities = provider.get(guild, player, null);
-            if (current_probabilities != null) {
-                pushToCollectionValueList(game_allocations, this.getNextGameBasedOnProbabilites(current_probabilities), player);
+        let unallocated_players = registered_players;
+        let run_count;
+        for (run_count = 0; unallocated_players.length != 0 && run_count < 100; run_count++) {
+            let attempt_count;
+            game_allocations.clear();
+            unallocated_players = registered_players;
+            for (attempt_count = 0; unallocated_players.length != 0 && attempt_count < 100; attempt_count++) {
+                this.allocatePlayersToLobbies(unallocated_players, game_allocations, provider, guild);
+                unallocated_players = [];
+                this.checkLobbyAgainstMaxLimit(game_allocations, unallocated_players, provider, guild);
+                this.checkLobbyAgainstMinLimit(game_allocations, unallocated_players, provider, guild);
             }
-        });
+        }
+
+        if (unallocated_players.length != 0) {
+            return message.say('Sorry failed to allocate due to limitis!');
+        }
 
         const embed = new MessageEmbed()
             .setColor('#32a858')

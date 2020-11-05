@@ -14,20 +14,20 @@ module.exports = class AddLimitCommand extends Command {
                     type: 'string',
                 },
                 {
-                    key: 'max',
-                    prompt: 'What do you want the max lobby size to be for the specified game?',
+                    key: 'min',
+                    prompt: 'What do you want the min lobby size to be for the specified game?',
                     type: 'integer',
                 },
                 {
-                    key: 'min',
-                    prompt: 'What do you want the min lobby size to be for the specified game?',
+                    key: 'max',
+                    prompt: 'What do you want the max lobby size to be for the specified game?',
                     type: 'integer',
                 },
             ],
         });
     }
 
-    run(message, { game_name, max, min }) {
+    run(message, { game_name, min, max }) {
         const provider = message.client.provider;
         const guild = message.guild;
 
@@ -41,6 +41,7 @@ module.exports = class AddLimitCommand extends Command {
         new_limits.max = max;
         const lobby_limits = provider.get(guild, 'lobby_limits', new Object());
         lobby_limits[game_name] = new_limits;
+        console.log(lobby_limits);
         provider.set(guild, 'lobby_limits', lobby_limits);
         return message.say('New lobby limits saved!');
     }
