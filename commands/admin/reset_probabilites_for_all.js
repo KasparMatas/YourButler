@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { getGameRegistrations, getPlayerRegistrations } = require('../../util');
+// Very similar to the the single player probabilites reset but a different command on purpose to prevent accidental resets.
 module.exports = class ResetProbabilitesForAllCommand extends Command {
     constructor(client) {
         super(client, {
