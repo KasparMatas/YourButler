@@ -80,8 +80,8 @@ module.exports = class NextAllocationCommand extends Command {
                         });
                         current_probabilities[game] = 0;
 
-                        console.log(current_probabilities);
                         provider.set(guild, player, current_probabilities);
+                        // console.log(current_probabilities);
                     }
                 }
             });

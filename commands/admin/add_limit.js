@@ -44,7 +44,6 @@ module.exports = class AddLimitCommand extends Command {
         new_limits.max = max;
         const lobby_limits = provider.get(guild, 'lobby_limits', new Object());
         lobby_limits[game_name] = new_limits;
-        console.log(lobby_limits);
         provider.set(guild, 'lobby_limits', lobby_limits);
         return message.say('New lobby limits saved!');
     }
