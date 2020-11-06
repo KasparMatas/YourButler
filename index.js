@@ -45,4 +45,4 @@ client.once('ready', () => {
 
 client.on('error', console.error);
 
-client.login("NzczNjMzMjQ3MjY2NzM0MDgw.X6MEGw.yaIL50qpjmNmkaiH_PL5Uu92KDU");
+client.login(TOKEN);

@@ -17,6 +17,7 @@ module.exports = class MuteAllCommand extends Command {
   for (const [memberID, member] of channel.members) {
    
     member.voice.setMute(true);
+	member.send("test")
   }
 } else {
   message.reply('You need to join a voice channel first!');
