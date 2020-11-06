@@ -29,7 +29,7 @@ client.registry
         ['admin', 'hidden commands'],
         ['games', 'acquired commands'],
         ['guest', 'available commands'],
-        ['print_player_data', 'printing commands to see the algorithm'],
+        ['print_allocation_stats', 'printing commands to see the algorithm'],
     ])
     .registerCommandsIn(path.join(__dirname, 'commands'))
     // Remove later

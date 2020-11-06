@@ -5,7 +5,7 @@ module.exports = class PrintPlayerRegistrationsCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'print_player_registrations',
-            group: 'print_player_data',
+            group: 'print_allocation_stats',
             memberName: 'print_player_registrations',
             description: 'Command to print player registrations',
             ownerOnly: true,

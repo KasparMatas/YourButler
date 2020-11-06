@@ -4,7 +4,7 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'print_player_probabilities',
-            group: 'print_player_data',
+            group: 'print_allocation_stats',
             memberName: 'print_player_probabilities',
             description: 'Command to print player probabilities',
             ownerOnly: true,
