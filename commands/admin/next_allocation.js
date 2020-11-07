@@ -81,7 +81,6 @@ module.exports = class NextAllocationCommand extends Command {
                         current_probabilities[game] = 0;
 
                         provider.set(guild, player, current_probabilities);
-                        // console.log(current_probabilities);
                     }
                 }
             });
@@ -100,7 +99,7 @@ module.exports = class NextAllocationCommand extends Command {
         const game_allocations = new Collection();
         const lobby_limits = provider.get(guild, 'lobby_limits', null);
         if (lobby_limits == null) {
-            console.log('No limits found?');
+            console.log('Allocations generated with no limits.');
             this.allocatePlayersToLobbies(registered_players, game_allocations, provider, guild);
         }
         else {

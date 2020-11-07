@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { MessageEmbed, Collection } = require('discord.js');
+const { Collection } = require('discord.js');
 module.exports = class PrintPlayerProbabilitiesCommand extends Command {
     constructor(client) {
         super(client, {
@@ -35,17 +35,21 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
                 }
             });
         }
+        else {
+            return message.say('No registrations found!');
+        }
 
         if (player_name == '') {
-            const embed = new MessageEmbed()
-                .setColor('#32a858')
-                .setTitle('Player probabilities data');
-
             player_registrations.each((game_list, player) => {
-                embed.addFields({ name: player, value: Object.entries(game_list) });
+                let output_string = '';
+                output_string += `**${player}**:\n`;
+                Object.entries(game_list).forEach(
+                    ([game, probability]) => {
+                        output_string += `${game}:${Number.parseFloat(probability).toFixed(5)}\n`;
+                    });
+                message.say(output_string);
             });
-
-            return message.channel.send(embed);
+            return message.say('**All probabilities printed.**');
         }
         else if (player_registrations.has(player_name)) {
             return message.say(Object.entries(player_registrations.get(player_name)));
