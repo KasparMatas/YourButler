@@ -25,7 +25,7 @@ module.exports = class ResetPlayerProbabilitesCommand extends Command {
             return message.say('Sorry no registrations found!');
         }
         const player_registrations = getPlayerRegistrations(message);
-        if (player_registrations.has(player_name)) {
+        if (!player_registrations.has(player_name)) {
             return message.say('Sorry the specified player does not have any registrations!');
         }
 
