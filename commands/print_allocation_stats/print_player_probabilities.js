@@ -35,6 +35,9 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
                 }
             });
         }
+        else {
+            return message.say('No registrations found!');
+        }
 
         if (player_name == '') {
             const embed = new MessageEmbed()

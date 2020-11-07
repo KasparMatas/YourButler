@@ -23,7 +23,10 @@ module.exports = class PrintGameRegistrationsCommand extends Command {
 
     run(message, { game_name }) {
         const game_registrations = getGameRegistrations(message);
-        if (game_name == '') {
+        if (game_registrations == null) {
+            return message.say('No registrations found!');
+        }
+        else if (game_name == '') {
             const embed = new MessageEmbed()
                 .setColor('#32a858')
                 .setTitle('Game registration data');
@@ -34,7 +37,7 @@ module.exports = class PrintGameRegistrationsCommand extends Command {
 
             return message.channel.send(embed);
         }
-        else if (game_registrations.has(game_name)) {
+        else if (game_registrations != null) {
             return message.say(game_registrations.get(game_name));
         }
         else {

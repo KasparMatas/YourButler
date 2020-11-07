@@ -31,7 +31,7 @@ module.exports = class ImportDataCommand extends Command {
         current_games.forEach(game => {
             provider.remove(guild, game);
         });
-        const current_players = provider.set(guild, 'registered_players', []);
+        const current_players = provider.get(guild, 'registered_players', []);
         current_players.forEach(player => {
             provider.remove(guild, player);
         });

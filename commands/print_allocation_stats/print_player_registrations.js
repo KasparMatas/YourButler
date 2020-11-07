@@ -23,7 +23,10 @@ module.exports = class PrintPlayerRegistrationsCommand extends Command {
 
     run(message, { player_name }) {
         const player_registrations = getPlayerRegistrations(message);
-        if (player_name == '') {
+        if (player_registrations == null) {
+            return message.say('No registrations found!');
+        }
+        else if (player_name == '') {
             const embed = new MessageEmbed()
                 .setColor('#32a858')
                 .setTitle('Player registration data');

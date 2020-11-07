@@ -63,7 +63,49 @@ const getPlayerRegistrations = (message) => {
     }
 };
 
+const getRegistrationsCount = (game_registrations) => {
+    let player_sum = 0;
+    game_registrations.each((player_list) => {
+        player_sum += player_list.length;
+    });
+    return player_sum;
+};
+
+const getReversePopularityProbabilities = (game_registrations, game_list) => {
+    const reverse_popularity_probabilities = new Object();
+    const player_sum = getRegistrationsCount(game_registrations);
+    let sum_of_probabilities = 0;
+    game_list.forEach(game => {
+        reverse_popularity_probabilities[game] = 1 - (game_registrations.get(game).length / player_sum);
+        sum_of_probabilities += reverse_popularity_probabilities[game];
+    });
+    // Normalise
+    game_list.forEach(game => {
+        reverse_popularity_probabilities[game] = reverse_popularity_probabilities[game] / sum_of_probabilities;
+    });
+    return reverse_popularity_probabilities;
+};
+
+const generatePlayerProbabilities = (game_list, player, message) => {
+
+    const provider = message.client.provider;
+    const guild = message.guild;
+
+    const game_registrations = getGameRegistrations(message);
+
+    const player_game_probabilities = new Object();
+    const base_probability = 1 / game_list.length;
+    const reverse_popularity_probabilities = getReversePopularityProbabilities(game_registrations, game_list);
+    game_list.forEach(game => {
+        const base_weight = 0.3;
+        const popularity_weight = 0.7;
+        player_game_probabilities[game] = (base_probability * base_weight) + (reverse_popularity_probabilities[game] * popularity_weight);
+    });
+    provider.set(guild, player, player_game_probabilities);
+};
+
 exports.reverseCollection = reverseCollection;
 exports.pushToCollectionValueList = pushToCollectionValueList;
 exports.getPlayerRegistrations = getPlayerRegistrations;
 exports.getGameRegistrations = getGameRegistrations;
+exports.generatePlayerProbabilities = generatePlayerProbabilities;
