@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { MessageEmbed } = require('discord.js');
 const { getPlayerRegistrations } = require('../../util');
 module.exports = class PrintPlayerRegistrationsCommand extends Command {
     constructor(client) {
@@ -27,15 +26,14 @@ module.exports = class PrintPlayerRegistrationsCommand extends Command {
             return message.say('No registrations found!');
         }
         else if (player_name == '') {
-            const embed = new MessageEmbed()
-                .setColor('#32a858')
-                .setTitle('Player registration data');
+            let output_string = '';
 
             player_registrations.each((game_list, player) => {
-                embed.addFields({ name: player, value: game_list });
+                output_string += `**${player}**:\n`;
+                output_string += `${game_list}\n`;
             });
 
-            return message.channel.send(embed);
+            return message.say(output_string);
         }
         else if (player_registrations.has(player_name)) {
             return message.say(player_registrations.get(player_name));
