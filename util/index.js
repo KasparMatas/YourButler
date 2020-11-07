@@ -1,5 +1,19 @@
 const { Collection } = require('discord.js');
 
+const removeElementFromArray = (array, element_to_remove) => {
+    return array.filter(existing_element => existing_element !== element_to_remove);
+};
+
+const removeFromCollectionValueList = (collection, key, value) => {
+    if (collection.has(key)) {
+        let value_list = collection.get(key);
+        if (value_list.includes(value)) {
+            value_list = removeElementFromArray(value_list, value);
+            collection.set(key, value_list);
+        }
+    }
+};
+
 const pushToCollectionValueList = (collection, key, value) => {
     if (collection.has(key)) {
         const value_list = collection.get(key);
@@ -109,3 +123,5 @@ exports.pushToCollectionValueList = pushToCollectionValueList;
 exports.getPlayerRegistrations = getPlayerRegistrations;
 exports.getGameRegistrations = getGameRegistrations;
 exports.generatePlayerProbabilities = generatePlayerProbabilities;
+exports.removeElementFromArray = removeElementFromArray;
+exports.removeFromCollectionValueList = removeFromCollectionValueList;

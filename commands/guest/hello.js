@@ -3,7 +3,7 @@ module.exports = class HelloWorldCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'hello',
-            group: 'admin',
+            group: 'guest',
             memberName: 'hello',
             description: 'Hello world command',
             ownerOnly: false,
@@ -11,6 +11,6 @@ module.exports = class HelloWorldCommand extends Command {
     }
 
     run(message) {
-        return message.say('World!');
+        return message.say('Sup?');
     }
 };
