@@ -1,24 +1,29 @@
 const { Command } = require('discord.js-commando');
-module.exports = class CreateRoleCommand extends Command {
+module.exports = class AssociateRoleCommand extends Command {
     constructor(client) {
         super(client, {
-            name: 'create_role',
+            name: 'associate_role',
             group: 'admin',
-            memberName: 'create_role',
-            description: 'Command to create a role for game lobby allocation.',
+            memberName: 'associate_role',
+            description: 'Command to associate a role with the specified game lobby.',
             ownerOnly: true,
             guildOnly: true,
             args: [
                 {
+                    key: 'role',
+                    prompt: 'Which role do you want to register?',
+                    type: 'role',
+                },
+                {
                     key: 'game_name',
-                    prompt: 'Which game do you want to create a role for?',
+                    prompt: 'Which game do you want to add the role for?',
                     type: 'string',
                 },
             ],
         });
     }
 
-    run(message, { game_name }) {
+    run(message, { role, game_name }) {
         const provider = message.client.provider;
         const guild = message.guild;
 
@@ -30,19 +35,12 @@ module.exports = class CreateRoleCommand extends Command {
         const game_roles = provider.get(guild, 'game_roles', new Object());
         if (Object.keys(game_roles).includes(game_name)) {
             return guild.roles.fetch(game_roles[game_name])
-                .then(role => message.say(`${game_name} already has the role ${role.name}`));
+                .then(found_role => message.say(`${game_name} already has the role ${found_role.name}`));
         }
-
-        const role_name = `Playing:${game_name}`;
-        guild.roles.create({
-            data: { name: role_name },
-            hoist: true,
-            mentionable: true,
-        })
-            .then(role => {
-                game_roles[game_name] = role.id;
-                provider.set(guild, 'game_roles', game_roles);
-                return message.say(`New role Playing:${game_name} created!`);
-            });
+        else {
+            game_roles[game_name] = role.id;
+            provider.set(guild, 'game_roles', game_roles);
+            return message.say('Association added.');
+        }
     }
 };
