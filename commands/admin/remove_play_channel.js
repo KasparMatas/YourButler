@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-module.exports = class CreatePlayChannelCommand extends Command {
+module.exports = class RemovePlayChannelCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'remove_play_channel',
