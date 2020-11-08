@@ -27,9 +27,9 @@ module.exports = class AssociateRoleCommand extends Command {
         const provider = message.client.provider;
         const guild = message.guild;
 
-        const available_games = provider.get(guild, 'available_games', []);
-        if (!available_games.includes(game_name)) {
-            return message.say(`${game_name} doesn't have any registrations.`);
+        const available_games = provider.get(guild, 'available_games', new Object());
+        if (!Object.keys(available_games).includes(game_name)) {
+            return message.say(`${game_name} is not available!`);
         }
 
         const game_roles = provider.get(guild, 'game_roles', new Object());
