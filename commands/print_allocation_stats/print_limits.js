@@ -26,7 +26,7 @@ module.exports = class PrintGameLimitsCommand extends Command {
         const available_games = provider.get(guild, 'available_games', new Object());
         const lobby_limits = provider.get(guild, 'lobby_limits', null);
         if (game_name == '' && lobby_limits != null) {
-            if (!Object.keys(available_games).length == 0) {
+            if (Object.keys(available_games).length == 0) {
                 return message.say('No games are available!');
             }
 

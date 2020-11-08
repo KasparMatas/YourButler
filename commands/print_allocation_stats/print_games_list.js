@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { getGameRegistrations } = require('../../util');
 module.exports = class PrintGamesListCommand extends Command {
     constructor(client) {
         super(client, {
@@ -13,12 +12,17 @@ module.exports = class PrintGamesListCommand extends Command {
     }
 
     run(message) {
-        const game_registrations = getGameRegistrations(message);
-        if (game_registrations == null) {
-            return message.say('No registrations found!');
+        const provider = message.client.provider;
+        const guild = message.guild;
+
+        const available_games = provider.get(guild, 'available_games', new Object());
+        if (Object.keys(available_games).length == 0) {
+            return message.say('No games are available!');
         }
-        else {
-            return message.say(`Currently registered for games: ${game_registrations.keyArray()}\n`);
-        }
+        let output_string = '';
+        Object.keys(available_games).forEach(game => {
+            output_string += `${game} : ${available_games[game]}\n`;
+        });
+        return message.say(output_string);
     }
 };

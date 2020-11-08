@@ -49,7 +49,7 @@ const getGameRegistrations = (message) => {
     const guild = message.guild;
 
     const available_games = provider.get(guild, 'available_games', new Object());
-    if (!Object.keys(available_games).length == 0) {
+    if (Object.keys(available_games).length != 0) {
         const game_registrations = new Collection();
         Object.keys(available_games).forEach(game => {
             const player_list = provider.get(guild, game, null);
