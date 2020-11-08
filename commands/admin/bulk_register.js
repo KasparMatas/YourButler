@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const { Command } = require('discord.js-commando');
 const { Collection } = require('discord.js');
-const { getGameRegistrations, reverseCollection, generatePlayerProbabilities } = require('../../util');
+const { getGameRegistrations, reverseCollection, generatePlayerProbabilities, arraysAreEqual } = require('../../util');
 module.exports = class BulkRegisterCommand extends Command {
     constructor(client) {
         super(client, {
@@ -11,13 +11,6 @@ module.exports = class BulkRegisterCommand extends Command {
             description: 'Command to register all of the players in the attached file to their respective games. This keeps previous registrations.',
             ownerOnly: true,
             guildOnly: true,
-        });
-    }
-
-    isEqual(first_array, second_array) {
-        const second_array_sorted = second_array.slice().sort();
-        return first_array.length === second_array.length && first_array.slice().sort().every((value, index) => {
-            return value === second_array_sorted[index];
         });
     }
 
@@ -44,7 +37,7 @@ module.exports = class BulkRegisterCommand extends Command {
             .then(body => {
                 Object.entries(JSON.parse(body)).forEach(([game, player_list]) => {
                     const current_player_list = provider.get(guild, game, []);
-                    if (!this.isEqual(current_player_list, player_list)) {
+                    if (!arraysAreEqual(current_player_list, player_list)) {
                         player_list.forEach(new_player => {
                             if (!current_player_list.includes(new_player)) {
                                 current_player_list.push(new_player);
