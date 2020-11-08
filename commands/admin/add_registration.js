@@ -43,7 +43,9 @@ module.exports = class AddRegistrationCommand extends Command {
         const game_registrations = getGameRegistrations(message);
         if (game_registrations == null || !game_registrations.has(game)) {
             provider.set(guild, game, [player]);
-            generatePlayerProbabilities([game], player, message);
+            game_registrations.set(game, [player]);
+            const player_registrations = reverseCollection(game_registrations);
+            generatePlayerProbabilities(player_registrations.get(player), player, message);
         }
         else {
             const player_list = game_registrations.get(game);
