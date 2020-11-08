@@ -42,6 +42,6 @@ module.exports = class CarryMeCommand extends Command {
             return message.say(`${found_game} doesn't have a channel setup. Sorry.`);
         }
         const destination_channel = guild.channels.cache.get(game_channels[found_game]);
-        return message.say(`You'r channel is ${destination_channel.name}`);
+        return message.say(`Your channel is ${destination_channel.name}`);
     }
 };

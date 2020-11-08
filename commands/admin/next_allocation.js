@@ -105,6 +105,10 @@ module.exports = class NextAllocationCommand extends Command {
         if (!arraysAreEqual(available_games, Object.keys(game_channels))) {
             return message.say('Not all channels have been setup yet!');
         }
+        const main_channel = provider.get(guild, 'main_room', null);
+        if (main_channel == null) {
+            return message.say('Main channel hasn\'t been setup yet!');
+        }
 
         const game_allocations = new Collection();
         const lobby_limits = provider.get(guild, 'lobby_limits', null);
