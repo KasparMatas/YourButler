@@ -96,13 +96,16 @@ module.exports = class NextAllocationCommand extends Command {
             return message.say('There are no registrations found!');
         }
 
-        const available_games = provider.get(guild, 'available_games', []);
+        const available_games = provider.get(guild, 'available_games', new Object());
+        if (!Object.keys(available_games).length == 0) {
+            return message.say('No games have been made available yet!');
+        }
         const game_roles = provider.get(guild, 'game_roles', new Object());
-        if (!arraysAreEqual(available_games, Object.keys(game_roles))) {
+        if (!arraysAreEqual(Object.keys(available_games), Object.keys(game_roles))) {
             return message.say('Not all roles have been setup yet!');
         }
         const game_channels = provider.get(guild, 'game_channels', new Object());
-        if (!arraysAreEqual(available_games, Object.keys(game_channels))) {
+        if (!arraysAreEqual(Object.keys(available_games), Object.keys(game_channels))) {
             return message.say('Not all channels have been setup yet!');
         }
 

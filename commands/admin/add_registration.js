@@ -28,10 +28,9 @@ module.exports = class AddRegistrationCommand extends Command {
         const provider = message.client.provider;
         const guild = message.guild;
 
-        const available_games = provider.get(guild, 'available_games', []);
-        if (!available_games.includes(game)) {
-            available_games.push(game);
-            provider.set(guild, 'available_games', available_games);
+        const available_games = provider.get(guild, 'available_games', new Object());
+        if (!Object.keys(available_games).includes(game)) {
+            return message.say(`Sorry ${game} is not available`);
         }
 
         const registered_players = provider.get(guild, 'registered_players', []);

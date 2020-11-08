@@ -1,7 +1,10 @@
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 const { Command } = require('discord.js-commando');
-const { Collection } = require('discord.js');
-const { getGameRegistrations, reverseCollection, generatePlayerProbabilities, arraysAreEqual } = require('../../util');
+// const { Collection } = require('discord.js');
+// const { getGameRegistrations, reverseCollection, generatePlayerProbabilities, arraysAreEqual } = require('../../util');
+
+// This code has been left here since there are a few good things to learn from it.
+
 module.exports = class BulkRegisterCommand extends Command {
     constructor(client) {
         super(client, {
@@ -15,6 +18,8 @@ module.exports = class BulkRegisterCommand extends Command {
     }
 
     run(message) {
+        return message.say('This command has been deprecated!');
+        /*
         if (message.attachments.size == 0) {
             return message.say('No registration data attachment found!');
         }
@@ -77,5 +82,6 @@ module.exports = class BulkRegisterCommand extends Command {
                 });
             });
         return message.say('Registration data successully added.');
+        */
     }
 };

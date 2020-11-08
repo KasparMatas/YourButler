@@ -35,10 +35,10 @@ module.exports = class AddLimitCommand extends Command {
         const provider = message.client.provider;
         const guild = message.guild;
 
-        const available_games = provider.get(guild, 'available_games', []);
+        const available_games = provider.get(guild, 'available_games', new Object());
 
-        if (!available_games.includes(game_name)) {
-            return message.say('Sorry the specified game doesn\'t have any registrations at the moment!');
+        if (!Object.keys(available_games).includes(game_name)) {
+            return message.say('Sorry the specified game is not available!');
         }
         const new_limits = new Object();
         new_limits.min = min;

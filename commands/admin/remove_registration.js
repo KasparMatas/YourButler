@@ -28,7 +28,6 @@ module.exports = class RemoveRegistrationCommand extends Command {
         const provider = message.client.provider;
         const guild = message.guild;
 
-        let available_games = provider.get(guild, 'available_games', []);
         let registered_players = provider.get(guild, 'registered_players', []);
 
         const game_registrations = getGameRegistrations(message);
@@ -38,8 +37,6 @@ module.exports = class RemoveRegistrationCommand extends Command {
                 player_list = removeElementFromArray(player_list, player);
                 provider.set(guild, game, player_list);
                 if (player_list.length == 0) {
-                    available_games = removeElementFromArray(available_games, game);
-                    provider.set(guild, 'available_games', available_games);
                     game_registrations.delete(game);
                 }
                 else {

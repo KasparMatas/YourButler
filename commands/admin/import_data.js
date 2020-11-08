@@ -27,8 +27,8 @@ module.exports = class ImportDataCommand extends Command {
         const player_probabilities = new Collection();
         const player_registrations = new Collection();
 
-        const current_games = provider.get(guild, 'available_games', []);
-        current_games.forEach(game => {
+        const current_games = provider.get(guild, 'available_games', new Object());
+        Object.keys(current_games).forEach(game => {
             provider.remove(guild, game);
         });
         const current_players = provider.get(guild, 'registered_players', []);
@@ -52,7 +52,6 @@ module.exports = class ImportDataCommand extends Command {
             .then(() => {
                 const game_registrations = reverseCollection(player_registrations);
 
-                provider.set(guild, 'available_games', game_registrations.keyArray());
                 provider.set(guild, 'registered_players', player_registrations.keyArray());
 
                 game_registrations.each((players, game) => {
@@ -60,7 +59,7 @@ module.exports = class ImportDataCommand extends Command {
                 });
             });
 
-        return message.say('Registration data successully replaced.');
-
+        message.say('Registration data successully replaced.');
+        return message.say('You still need to add the games, roles and lobbies manually!');
     }
 };

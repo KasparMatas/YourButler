@@ -48,10 +48,10 @@ const getGameRegistrations = (message) => {
     const provider = message.client.provider;
     const guild = message.guild;
 
-    const available_games = provider.get(guild, 'available_games', null);
-    if (available_games != null) {
+    const available_games = provider.get(guild, 'available_games', new Object());
+    if (!Object.keys(available_games).length == 0) {
         const game_registrations = new Collection();
-        available_games.forEach(game => {
+        Object.keys(available_games).forEach(game => {
             const player_list = provider.get(guild, game, null);
             if (player_list != null) {
                 game_registrations.set(game, player_list);
