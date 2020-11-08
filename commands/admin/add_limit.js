@@ -7,6 +7,7 @@ module.exports = class AddLimitCommand extends Command {
             memberName: 'add_limit',
             description: 'Command to add lobby limits to games',
             ownerOnly: true,
+            guildOnly: true,
             args: [
                 {
                     key: 'game_name',
