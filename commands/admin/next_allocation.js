@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed, Collection } = require('discord.js');
-const { pushToCollectionValueList } = require('../../util');
+const { pushToCollectionValueList, arraysAreEqual } = require('../../util');
 module.exports = class NextAllocationCommand extends Command {
     constructor(client) {
         super(client, {
@@ -94,6 +94,12 @@ module.exports = class NextAllocationCommand extends Command {
 
         if (registered_players.size == 0) {
             return message.say('There are no registrations found!');
+        }
+
+        const available_games = provider.get(guild, 'available_games', []);
+        const game_roles = provider.get(guild, 'game_roles', new Object());
+        if (!arraysAreEqual(available_games, Object.keys(game_roles))) {
+            return message.say('Not all roles have been setup yet!');
         }
 
         const game_allocations = new Collection();

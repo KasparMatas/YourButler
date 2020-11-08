@@ -1,5 +1,12 @@
 const { Collection } = require('discord.js');
 
+const arraysAreEqual = (first_array, second_array) => {
+    const second_array_sorted = second_array.slice().sort();
+    return first_array.length === second_array.length && first_array.slice().sort().every((value, index) => {
+        return value === second_array_sorted[index];
+    });
+};
+
 const removeElementFromArray = (array, element_to_remove) => {
     return array.filter(existing_element => existing_element !== element_to_remove);
 };
@@ -125,3 +132,4 @@ exports.getGameRegistrations = getGameRegistrations;
 exports.generatePlayerProbabilities = generatePlayerProbabilities;
 exports.removeElementFromArray = removeElementFromArray;
 exports.removeFromCollectionValueList = removeFromCollectionValueList;
+exports.arraysAreEqual = arraysAreEqual;
