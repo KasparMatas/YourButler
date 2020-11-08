@@ -36,6 +36,8 @@ module.exports = class CreateRoleCommand extends Command {
         const role_name = `Playing:${game_name}`;
         guild.roles.create({
             data: { name: role_name },
+            hoist: true,
+            mentionable: true,
         })
             .then(role => {
                 game_roles[game_name] = role.id;
