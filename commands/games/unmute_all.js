@@ -7,20 +7,21 @@ module.exports = class unMuteAllCommand extends Command {
             memberName: 'unmute_all',
             description: 'Command to unmute all users in your voice channel.',
             guildOnly: true,
+            adminOnly: true,
         });
     }
 
     run(message) {
-		
-		if (message.member.voice.channel) {
-  let channel = message.guild.channels.cache.get(message.member.voice.channel.id);
-  for (const [memberID, member] of channel.members) {
-   
-    member.voice.setMute(false);
-  }
-} else {
-  message.reply('You need to join a voice channel first!');
-}
-     
+
+        if (message.member.voice.channel) {
+            let channel = message.guild.channels.cache.get(message.member.voice.channel.id);
+            for (const [memberID, member] of channel.members) {
+
+                member.voice.setMute(false);
+            }
+        } else {
+            message.reply('You need to join a voice channel first!');
+        }
+
     }
 };

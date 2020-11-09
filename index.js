@@ -10,6 +10,8 @@ const {
     PREFIX,
     OWNERS,
     TOKEN,
+    MESSAGE,
+    CHANNEL,
 } = process.env;
 
 const client = new CommandoClient({
@@ -46,6 +48,11 @@ client.once('ready', () => {
 });
 
 client.on('error', console.error);
+
+// Hack to keep registration message in cache.
+client.on('ready', () => {
+    client.channels.cache.get(CHANNEL).messages.cache.get(MESSAGE);
+});
 
 client.on('messageReactionAdd', (reaction, user) => {
     const provider = client.provider;
