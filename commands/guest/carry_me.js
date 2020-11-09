@@ -23,7 +23,7 @@ module.exports = class CarryMeCommand extends Command {
             return message.say('Not all channels have been setup yet!');
         }
         const user_roles = message.member.roles.cache;
-        if (user_roles.keys().length == 0) {
+        if (user_roles.keyArray().length == 0) {
             return message.say('You don\'t have any roles');
         }
 
