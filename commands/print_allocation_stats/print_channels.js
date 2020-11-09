@@ -11,7 +11,7 @@ module.exports = class PrintChannelsCommand extends Command {
         });
     }
 
-    async run(message) {
+    run(message) {
         const provider = message.client.provider;
         const guild = message.guild;
 
