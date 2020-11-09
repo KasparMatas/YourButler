@@ -34,7 +34,7 @@ module.exports = class CreateRegistrationMessageCommand extends Command {
         const embed = new MessageEmbed()
             .setColor('#32a858')
             .setTitle('Registrations')
-            .setDescription('Below you can see which emoji you need to click to register/unregister.');
+            .setDescription('Below you can see which emoji you need to click to register/unregister. Please use the registration only when the bot is online!');
 
         Object.entries(available_games).forEach(([game, emoji]) => {
             embed.addFields({ name: game, value: emoji, inline: true });
