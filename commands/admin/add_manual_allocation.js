@@ -13,7 +13,7 @@ module.exports = class AddManualAllocationCommand extends Command {
                 {
                     key: 'player',
                     prompt: 'Which player do you want to allocate?',
-                    type: 'string',
+                    type: 'user',
                 },
                 {
                     key: 'game',
@@ -27,7 +27,7 @@ module.exports = class AddManualAllocationCommand extends Command {
     run(message, { player, game }) {
         const provider = message.client.provider;
         const guild = message.guild;
-        const current_probabilities = provider.get(guild, player, null);
+        const current_probabilities = provider.get(guild, player.id, null);
         if (current_probabilities == null) {
             return message.say('Sorry the player isn\'t registered for anything yet.');
         }
@@ -35,9 +35,7 @@ module.exports = class AddManualAllocationCommand extends Command {
             return message.say(`Sorry the player isn't registered to play ${game}`);
         }
 
-        const player_object = new Object();
-        player_object.player_name = player;
-        message.client.registry.commands.get('reset_player_probabilities').run(message, player_object);
+        message.client.registry.commands.get('reset_player_probabilities').run(message, player);
 
         if (current_probabilities != null) {
             const game_list = Object.keys(current_probabilities);
@@ -50,10 +48,10 @@ module.exports = class AddManualAllocationCommand extends Command {
                 });
                 current_probabilities[game] = 0;
 
-                provider.set(guild, player, current_probabilities);
+                provider.set(guild, player.id, current_probabilities);
             }
         }
 
-        return message.say(`${player} has been allocated to the ${game} lobby`);
+        return message.say(`${player.username} has been allocated to the ${game} lobby`);
     }
 };

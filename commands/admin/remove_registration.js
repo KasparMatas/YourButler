@@ -13,7 +13,7 @@ module.exports = class RemoveRegistrationCommand extends Command {
                 {
                     key: 'player',
                     prompt: 'Which player\'s registrations do you want change?',
-                    type: 'string',
+                    type: 'user',
                 },
                 {
                     key: 'game',
@@ -25,6 +25,6 @@ module.exports = class RemoveRegistrationCommand extends Command {
     }
 
     run(message, { player, game }) {
-        unregisterPlayerFromGame(message, player, game);
+        unregisterPlayerFromGame(message, player.id, game);
     }
 };

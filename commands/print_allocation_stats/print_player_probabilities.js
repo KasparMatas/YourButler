@@ -11,16 +11,16 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
             guildOnly: true,
             args: [
                 {
-                    key: 'player_name',
+                    key: 'player',
                     prompt: 'Which player probabilities do you want to see?',
-                    type: 'string',
+                    type: 'user',
                     default: '',
                 },
             ],
         });
     }
 
-    run(message, { player_name }) {
+    async run(message, { player }) {
 
         const provider = message.client.provider;
         const guild = message.guild;
@@ -28,10 +28,10 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
         const registered_players = provider.get(guild, 'registered_players', null);
         const player_registrations = new Collection();
         if (registered_players != null) {
-            registered_players.forEach(player => {
-                const game_list = provider.get(guild, player, null);
+            registered_players.forEach(player_id => {
+                const game_list = provider.get(guild, player_id, null);
                 if (game_list != null) {
-                    player_registrations.set(player, game_list);
+                    player_registrations.set(player_id, game_list);
                 }
             });
         }
@@ -39,10 +39,11 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
             return message.say('No registrations found!');
         }
 
-        if (player_name == '') {
-            player_registrations.each((game_list, player) => {
+        if (player == '') {
+            await message.guild.members.fetch({ user: registered_players });
+            player_registrations.each((game_list, player_id) => {
                 let output_string = '';
-                output_string += `**${player}**:\n`;
+                output_string += `**${guild.members.cache.get(player_id).user.username}**:\n`;
                 Object.entries(game_list).forEach(
                     ([game, probability]) => {
                         output_string += `${game}:${Number.parseFloat(probability).toFixed(5)}\n`;
@@ -51,8 +52,8 @@ module.exports = class PrintPlayerProbabilitiesCommand extends Command {
             });
             return message.say('**All probabilities printed.**');
         }
-        else if (player_registrations.has(player_name)) {
-            return message.say(Object.entries(player_registrations.get(player_name)));
+        else if (player_registrations.has(player.id)) {
+            return message.say(Object.entries(player_registrations.get(player.id)));
         }
         else {
             return message.say('Player not found!');

@@ -13,7 +13,7 @@ module.exports = class AddRegistrationCommand extends Command {
                 {
                     key: 'player',
                     prompt: 'Which player\'s registrations do you want extend?',
-                    type: 'string',
+                    type: 'user',
                 },
                 {
                     key: 'game',
@@ -25,6 +25,6 @@ module.exports = class AddRegistrationCommand extends Command {
     }
 
     run(message, { player, game }) {
-        registerPlayerToGame(message, player, game);
+        registerPlayerToGame(message, player.id, game);
     }
 };
