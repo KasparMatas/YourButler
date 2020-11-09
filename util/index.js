@@ -50,14 +50,21 @@ const getGameRegistrations = (message) => {
 
     const available_games = provider.get(guild, 'available_games', new Object());
     if (Object.keys(available_games).length != 0) {
+        let game_added = false;
         const game_registrations = new Collection();
         Object.keys(available_games).forEach(game => {
             const player_list = provider.get(guild, game, null);
-            if (player_list != null) {
+            if (player_list) {
+                game_added = true;
                 game_registrations.set(game, player_list);
             }
         });
-        return game_registrations;
+        if (game_added) {
+            return game_registrations;
+        }
+        else {
+            return null;
+        }
     }
     else {
         return null;
@@ -125,6 +132,74 @@ const generatePlayerProbabilities = (game_list, player, message) => {
     provider.set(guild, player, player_game_probabilities);
 };
 
+const registerPlayerToGame = (message, player, game) => {
+    const provider = message.client.provider;
+    const guild = message.guild;
+
+    const available_games = provider.get(guild, 'available_games', new Object());
+    if (!Object.keys(available_games).includes(game)) {
+        return;
+    }
+
+    const registered_players = provider.get(guild, 'registered_players', []);
+    if (!registered_players.includes(player)) {
+        registered_players.push(player);
+        provider.set(guild, 'registered_players', registered_players);
+    }
+
+    let game_registrations = getGameRegistrations(message);
+    if (!game_registrations) {
+        game_registrations = new Collection();
+    }
+    if (!game_registrations.has(game)) {
+        provider.set(guild, game, [player]);
+        game_registrations.set(game, [player]);
+        const player_registrations = reverseCollection(game_registrations);
+        generatePlayerProbabilities(player_registrations.get(player), player, message);
+    }
+    else {
+        const player_list = game_registrations.get(game);
+        if (!player_list.includes(player)) {
+            player_list.push(player);
+            provider.set(guild, game, player_list);
+            pushToCollectionValueList(game_registrations, game, player);
+            const player_registrations = reverseCollection(game_registrations);
+            generatePlayerProbabilities(player_registrations.get(player), player, message);
+        }
+    }
+};
+
+const unregisterPlayerFromGame = (message, player, game) => {
+    const provider = message.client.provider;
+    const guild = message.guild;
+
+    let registered_players = provider.get(guild, 'registered_players', []);
+
+    const game_registrations = getGameRegistrations(message);
+    if (game_registrations && game_registrations.has(game)) {
+        let player_list = game_registrations.get(game);
+        if (player_list.includes(player)) {
+            player_list = removeElementFromArray(player_list, player);
+            if (player_list.length == 0) {
+                provider.remove(guild, game);
+                game_registrations.delete(game);
+            }
+            else {
+                provider.set(guild, game, player_list);
+                removeFromCollectionValueList(game_registrations, game, player);
+            }
+            const player_registrations = reverseCollection(game_registrations);
+            if (player_registrations.has(player)) {
+                generatePlayerProbabilities(player_registrations.get(player), player, message);
+            }
+            else {
+                registered_players = removeElementFromArray(registered_players, player);
+                provider.set(guild, 'registered_players', registered_players);
+            }
+        }
+    }
+};
+
 exports.reverseCollection = reverseCollection;
 exports.pushToCollectionValueList = pushToCollectionValueList;
 exports.getPlayerRegistrations = getPlayerRegistrations;
@@ -133,3 +208,5 @@ exports.generatePlayerProbabilities = generatePlayerProbabilities;
 exports.removeElementFromArray = removeElementFromArray;
 exports.removeFromCollectionValueList = removeFromCollectionValueList;
 exports.arraysAreEqual = arraysAreEqual;
+exports.registerPlayerToGame = registerPlayerToGame;
+exports.unregisterPlayerFromGame = unregisterPlayerFromGame;

@@ -87,7 +87,7 @@ module.exports = class NextAllocationCommand extends Command {
         });
     }
 
-    run(message) {
+    async run(message) {
         const provider = message.client.provider;
         const guild = message.guild;
         const registered_players = provider.get(guild, 'registered_players', []);
@@ -147,7 +147,18 @@ module.exports = class NextAllocationCommand extends Command {
             .setTimestamp()
             .setFooter('Playtime start:');
 
-        game_allocations.each((player_list, game) => {
+
+        await guild.members.fetch({ user: registered_players });
+        game_allocations.each((player_id_list, game) => {
+            const player_list = [];
+            player_id_list.forEach(player_id => {
+                const player = guild.members.cache.get(player_id);
+                Object.keys(game_roles).forEach(game_with_role => {
+                    player.roles.remove(game_roles[game_with_role]);
+                });
+                player.roles.add(game_roles[game]);
+                player_list.push(player);
+            });
             embed.addFields({ name: game, value: player_list });
         });
 

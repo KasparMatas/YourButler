@@ -3,6 +3,7 @@ const Database = require('better-sqlite3');
 const db = new Database('my_data.db');
 
 const { CommandoClient, SyncSQLiteProvider } = require('discord.js-commando');
+const { unregisterPlayerFromGame, registerPlayerToGame } = require('./util');
 
 require('dotenv').config();
 const {
@@ -45,5 +46,39 @@ client.once('ready', () => {
 });
 
 client.on('error', console.error);
+
+client.on('messageReactionAdd', (reaction, user) => {
+    const provider = client.provider;
+    const guild = reaction.message.guild;
+
+    if (provider.get(guild, 'listen_to_reactions', null)) {
+        const registration_message_id = provider.get(guild, 'registration_message_id', null);
+        const available_games = provider.get(guild, 'available_games', new Object());
+        if (registration_message_id && registration_message_id == reaction.message.id && Object.keys(available_games).length != 0) {
+            Object.entries(available_games).forEach(([game, emoji]) => {
+                if (reaction.emoji.name == emoji) {
+                    registerPlayerToGame(reaction.message, user.id, game);
+                }
+            });
+        }
+    }
+});
+
+client.on('messageReactionRemove', (reaction, user) => {
+    const provider = client.provider;
+    const guild = reaction.message.guild;
+
+    if (provider.get(guild, 'listen_to_reactions', null)) {
+        const registration_message_id = provider.get(guild, 'registration_message_id', null);
+        const available_games = provider.get(guild, 'available_games', new Object());
+        if (registration_message_id && registration_message_id == reaction.message.id && Object.keys(available_games).length != 0) {
+            Object.entries(available_games).forEach(([game, emoji]) => {
+                if (reaction.emoji.name == emoji) {
+                    unregisterPlayerFromGame(reaction.message, user.id, game);
+                }
+            });
+        }
+    }
+});
 
 client.login(TOKEN);

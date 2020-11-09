@@ -11,32 +11,33 @@ module.exports = class PrintPlayerRegistrationsCommand extends Command {
             guildOnly: true,
             args: [
                 {
-                    key: 'player_name',
+                    key: 'player',
                     prompt: 'Which player registrations do you want to see?',
-                    type: 'string',
+                    type: 'user',
                     default: '',
                 },
             ],
         });
     }
 
-    run(message, { player_name }) {
+    async run(message, { player }) {
         const player_registrations = getPlayerRegistrations(message);
         if (player_registrations == null) {
             return message.say('No registrations found!');
         }
-        else if (player_name == '') {
+        else if (player == '') {
+            await message.guild.members.fetch({ user: player_registrations.keyArray() });
             let output_string = '';
 
-            player_registrations.each((game_list, player) => {
-                output_string += `**${player}**:\n`;
+            player_registrations.each((game_list, player_id) => {
+                output_string += `**${message.guild.members.cache.get(player_id).user.username}**:\n`;
                 output_string += `${game_list}\n`;
             });
 
             return message.say(output_string);
         }
-        else if (player_registrations.has(player_name)) {
-            return message.say(player_registrations.get(player_name));
+        else if (player_registrations.has(player.id)) {
+            return message.say(player_registrations.get(player.id));
         }
         else {
             return message.say('Player not found!');
