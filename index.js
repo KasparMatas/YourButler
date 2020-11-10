@@ -39,20 +39,31 @@ client.registry
     .registerDefaultGroups()
     .registerDefaultCommands();
 
+const reaction_message_check = () => {
+    if (MESSAGE && CHANNEL) {
+        client.channels.fetch(CHANNEL).then(() => client.channels.cache.get(CHANNEL).messages.fetch(MESSAGE).catch(console.error));
+        if (client.channels.cache.has(CHANNEL) && client.channels.cache.get(CHANNEL).messages.cache.has(MESSAGE)) {
+            client.user.setActivity('Registrations', { type: 'WATCHING' }).then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
+                .catch(console.error);
+        }
+        else {
+            client.user.setActivity('Sweet dreams', { type: 'WATCHING' }).then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
+                .catch(console.error);
+        }
+    }
+};
+
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}! (${client.user.id})`);
     console.log('Available guilds:');
     client.guilds.cache.each(guild => {
         console.log(`${guild.name}(${guild.id})`);
     });
+    // Hack to keep registration message in cache.
+    client.setInterval(reaction_message_check, 1800000);
 });
 
 client.on('error', console.error);
-
-// Hack to keep registration message in cache.
-client.on('ready', () => {
-    client.channels.cache.get(CHANNEL).messages.cache.get(MESSAGE);
-});
 
 client.on('messageReactionAdd', (reaction, user) => {
     const provider = client.provider;
