@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-// const { ResetPlayerProbabilitesCommand } = require('./reset_player_probabilities.js');
+const { generatePlayerProbabilities } = require('../../util');
 module.exports = class AddManualAllocationCommand extends Command {
     constructor(client) {
         super(client, {
@@ -13,7 +13,7 @@ module.exports = class AddManualAllocationCommand extends Command {
                 {
                     key: 'player',
                     prompt: 'Which player do you want to allocate?',
-                    type: 'user',
+                    type: 'member',
                 },
                 {
                     key: 'game',
@@ -34,8 +34,12 @@ module.exports = class AddManualAllocationCommand extends Command {
         else if (!Object.keys(current_probabilities).includes(game)) {
             return message.say(`Sorry the player isn't registered to play ${game}`);
         }
+        const game_roles = provider.get(guild, 'game_roles', null);
+        if (!game_roles) {
+            return message.say('Roles haven\'t been setup yet!');
+        }
 
-        message.client.registry.commands.get('reset_player_probabilities').run(message, player);
+        generatePlayerProbabilities(Object.keys(current_probabilities), player.id, message);
 
         if (current_probabilities != null) {
             const game_list = Object.keys(current_probabilities);
@@ -52,6 +56,11 @@ module.exports = class AddManualAllocationCommand extends Command {
             }
         }
 
-        return message.say(`${player.username} has been allocated to the ${game} lobby`);
+        Object.keys(game_roles).forEach(game_with_role => {
+            player.roles.remove(game_roles[game_with_role]);
+        });
+        player.roles.add(game_roles[game]);
+
+        return message.say(`${player.user.username} has been allocated to the ${game} lobby`);
     }
 };
