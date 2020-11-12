@@ -36,7 +36,7 @@ module.exports = class NextAllocationCommand extends Command {
         });
     }
 
-    checkLobbyAgainstMaxLimit(game_allocations, unallocated_players, lobby_limits) {
+    checkLobbiesAgainstMaxLimit(game_allocations, unallocated_players, lobby_limits) {
         game_allocations.each((players_in_lobby, game) => {
             if (Object.keys(lobby_limits).includes(game)) {
                 if (players_in_lobby.length < lobby_limits[game].min) {
@@ -50,11 +50,30 @@ module.exports = class NextAllocationCommand extends Command {
         });
     }
 
-    checkLobbyAgainstMinLimit(game_allocations, unallocated_players, lobby_limits) {
+    checkLobbiesAgainstMinLimit(game_allocations, unallocated_players, lobby_limits) {
         game_allocations.each((players_in_lobby, game) => {
             if (Object.keys(lobby_limits).includes(game)) {
                 if (players_in_lobby.length > lobby_limits[game].max) {
                     // console.log(game, players_in_lobby.length, '>', lobby_limits[game].max);
+                    game_allocations.get(game).forEach(player => {
+                        unallocated_players.push(player);
+                    });
+                    game_allocations.delete(game);
+                }
+            }
+        });
+    }
+
+    checkLobbiesAgainstLinkedGame(game_allocations, unallocated_players, linked_games, lobby_limits) {
+        game_allocations.keyArray.forEach(game => {
+            if (Object.keys(linked_games).includes(game)) {
+                if (!game_allocations.keyArray.includes(linked_games[game])) {
+                    game_allocations.get(game).forEach(player => {
+                        unallocated_players.push(player);
+                    });
+                    game_allocations.delete(game);
+                }
+                else if ((game_allocations.get(game).lenght + game_allocations.get(linked_games[game]).lenght) > Math.max(lobby_limits[game].max, lobby_limits[linked_games[game]].max)) {
                     game_allocations.get(game).forEach(player => {
                         unallocated_players.push(player);
                     });
@@ -114,6 +133,7 @@ module.exports = class NextAllocationCommand extends Command {
         }
 
         const game_allocations = new Collection();
+        const linked_games = provider.get(guild, 'linked_games', new Object());
         const lobby_limits = provider.get(guild, 'lobby_limits', null);
         if (lobby_limits == null) {
             console.log('Allocations generated with no limits.');
@@ -129,8 +149,9 @@ module.exports = class NextAllocationCommand extends Command {
                 for (attempt_count = 0; unallocated_players.length != 0 && attempt_count < 100; attempt_count++) {
                     this.allocatePlayersToLobbies(unallocated_players, game_allocations, provider, guild);
                     unallocated_players = [];
-                    this.checkLobbyAgainstMaxLimit(game_allocations, unallocated_players, lobby_limits);
-                    this.checkLobbyAgainstMinLimit(game_allocations, unallocated_players, lobby_limits);
+                    this.checkLobbiesAgainstLinkedGame(game_allocations, unallocated_players, linked_games, lobby_limits);
+                    this.checkLobbiesAgainstMaxLimit(game_allocations, unallocated_players, lobby_limits);
+                    this.checkLobbiesAgainstMinLimit(game_allocations, unallocated_players, lobby_limits);
                 }
             }
             if (unallocated_players.length != 0) {
@@ -149,6 +170,32 @@ module.exports = class NextAllocationCommand extends Command {
 
 
         await guild.members.fetch({ user: registered_players });
+
+        game_allocations.each((player_id_list, game) => {
+            if (Object.keys(linked_games).includes(game)) {
+                const player_list = [];
+                player_id_list.forEach(player_id => {
+                    const player = guild.members.cache.get(player_id);
+                    Object.keys(game_roles).forEach(game_with_role => {
+                        player.roles.remove(game_roles[game_with_role]);
+                    });
+                    player.roles.add(game_roles[game]);
+                    player_list.push(player);
+                });
+                game_allocations.get(linked_games[game]).forEach(player_id => {
+                    const player = guild.members.cache.get(player_id);
+                    Object.keys(game_roles).forEach(game_with_role => {
+                        player.roles.remove(game_roles[game_with_role]);
+                    });
+                    player.roles.add(game_roles[game]);
+                    player_list.push(player);
+                });
+                embed.addFields({ name: `${game} & ${linked_games[game]}`, value: player_list });
+                game_allocations.delete(game);
+                game_allocations.delete(linked_games[game]);
+            }
+        });
+
         game_allocations.each((player_id_list, game) => {
             const player_list = [];
             player_id_list.forEach(player_id => {
