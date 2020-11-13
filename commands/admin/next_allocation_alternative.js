@@ -1,12 +1,12 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed, Collection } = require('discord.js');
 const { pushToCollectionValueList, arraysAreEqual } = require('../../util');
-module.exports = class NextAllocationCommand extends Command {
+module.exports = class NextAllocationAlternativeCommand extends Command {
     constructor(client) {
         super(client, {
-            name: 'next_allocation',
+            name: 'next_allocation_alternative',
             group: 'admin',
-            memberName: 'next_allocation',
+            memberName: 'next_allocation_alternative',
             description: 'Command to show guests game allocation',
             ownerOnly: true,
             guildOnly: true,
@@ -105,6 +105,53 @@ module.exports = class NextAllocationCommand extends Command {
         });
     }
 
+    allocatePlayersToLobbiesStrict(player_list, game_allocations, provider, guild, lobby_limits) {
+        player_list.forEach(player => {
+            const current_probabilities = provider.get(guild, player, null);
+            // Else should return or throw an error somehow.
+            if (current_probabilities != null) {
+                let deleted_game = false;
+                Object.keys(current_probabilities).forEach(game => {
+                    if (game_allocations.has(game) && game_allocations.get(game).length >= lobby_limits[game].max) {
+                        delete current_probabilities[game];
+                        deleted_game = true;
+                    }
+                    else if (game_allocations.has(game) && game_allocations.get(game).length + player_list.length < lobby_limits[game].min) {
+                        delete current_probabilities[game];
+                        deleted_game = true;
+                    }
+                });
+
+                if (Object.keys(current_probabilities).length != 0) {
+                    if (deleted_game) {
+                        let probability_sum = 0;
+                        Object.keys(current_probabilities).forEach(game => {
+                            probability_sum += current_probabilities[game];
+                        });
+                        if (probability_sum != 0) {
+                            Object.keys(current_probabilities).forEach(game => {
+                                current_probabilities[game] = current_probabilities[game] / probability_sum;
+                            });
+                        }
+                        else {
+                            Object.keys(current_probabilities).forEach(game => {
+                                current_probabilities[game] = 1;
+                            });
+                        }
+                    }
+                    pushToCollectionValueList(game_allocations, this.getNextGameBasedOnProbabilites(current_probabilities), player);
+                }
+            }
+        });
+    }
+
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
     async run(message) {
         const provider = message.client.provider;
         const guild = message.guild;
@@ -147,8 +194,9 @@ module.exports = class NextAllocationCommand extends Command {
                 let attempt_count;
                 game_allocations.clear();
                 unallocated_players = registered_players.filter(player_id => main_channel.members.keyArray().includes(player_id));
+                this.shuffleArray(unallocated_players);
                 for (attempt_count = 0; unallocated_players.length != 0 && attempt_count < 100; attempt_count++) {
-                    this.allocatePlayersToLobbies(unallocated_players, game_allocations, provider, guild);
+                    this.allocatePlayersToLobbiesStrict(unallocated_players, game_allocations, provider, guild, lobby_limits);
                     unallocated_players = [];
                     this.checkLobbiesAgainstLinkedGame(game_allocations, unallocated_players, linked_games, lobby_limits);
                     this.checkLobbiesAgainstMaxLimit(game_allocations, unallocated_players, lobby_limits);

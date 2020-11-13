@@ -33,7 +33,6 @@ module.exports = class PrintGameRegistrationsCommand extends Command {
                 const player_list = [];
                 player_id_list.forEach(player_id => {
                     const player = message.guild.members.cache.get(player_id);
-                    console.log(player);
                     player_list.push(player.user.username);
                 });
                 output_string += `**${game}** : ${player_list.length}\n${player_list}\n`;
