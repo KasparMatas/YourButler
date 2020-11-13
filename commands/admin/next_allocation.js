@@ -65,9 +65,9 @@ module.exports = class NextAllocationCommand extends Command {
     }
 
     checkLobbiesAgainstLinkedGame(game_allocations, unallocated_players, linked_games, lobby_limits) {
-        game_allocations.keyArray.forEach(game => {
+        game_allocations.keyArray().forEach(game => {
             if (Object.keys(linked_games).includes(game)) {
-                if (!game_allocations.keyArray.includes(linked_games[game])) {
+                if (!game_allocations.keyArray().includes(linked_games[game])) {
                     game_allocations.get(game).forEach(player => {
                         unallocated_players.push(player);
                     });
@@ -127,25 +127,27 @@ module.exports = class NextAllocationCommand extends Command {
         if (!arraysAreEqual(Object.keys(available_games), Object.keys(game_channels))) {
             return message.say('Not all channels have been setup yet!');
         }
-        const main_channel = provider.get(guild, 'main_room', null);
-        if (main_channel == null) {
+        const main_channel_id = provider.get(guild, 'main_room', null);
+        if (main_channel_id == null) {
             return message.say('Main channel hasn\'t been setup yet!');
         }
+        const main_channel = guild.channels.cache.get(main_channel_id);
 
         const game_allocations = new Collection();
         const linked_games = provider.get(guild, 'linked_games', new Object());
         const lobby_limits = provider.get(guild, 'lobby_limits', null);
         if (lobby_limits == null) {
             console.log('Allocations generated with no limits.');
-            this.allocatePlayersToLobbies(registered_players, game_allocations, provider, guild);
+            const unallocated_players = registered_players.filter(player_id => main_channel.members.keyArray().includes(player_id));
+            this.allocatePlayersToLobbies(unallocated_players, game_allocations, provider, guild);
         }
         else {
-            let unallocated_players = registered_players;
+            let unallocated_players = registered_players.filter(player_id => main_channel.members.keyArray().includes(player_id));
             let run_count;
             for (run_count = 0; unallocated_players.length != 0 && run_count < 1000; run_count++) {
                 let attempt_count;
                 game_allocations.clear();
-                unallocated_players = registered_players;
+                unallocated_players = registered_players.filter(player_id => main_channel.members.keyArray().includes(player_id));
                 for (attempt_count = 0; unallocated_players.length != 0 && attempt_count < 100; attempt_count++) {
                     this.allocatePlayersToLobbies(unallocated_players, game_allocations, provider, guild);
                     unallocated_players = [];
