@@ -125,8 +125,8 @@ const generatePlayerProbabilities = (game_list, player, message) => {
     const base_probability = 1 / game_list.length;
     const reverse_popularity_probabilities = getReversePopularityProbabilities(game_registrations, game_list);
     game_list.forEach(game => {
-        const base_weight = 0.3;
-        const popularity_weight = 0.7;
+        const base_weight = 0.2;
+        const popularity_weight = 0.8;
         player_game_probabilities[game] = (base_probability * base_weight) + (reverse_popularity_probabilities[game] * popularity_weight);
     });
     provider.set(guild, player, player_game_probabilities);
