@@ -20,7 +20,6 @@ module.exports = class ResetPlayerProbabilitesCommand extends Command {
     }
 
     run(message, { player }) {
-        console.log(player);
         const game_registrations = getGameRegistrations(message);
         if (game_registrations == null) {
             return message.say('Sorry no registrations found!');
